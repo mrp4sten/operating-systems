@@ -1,9 +1,17 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
-	int array[] = {1, 2, 3, 4, 5}; 
-	array[0] = 12;
+	/* Declaring ponter with a specific memory sice */
+  int *array = malloc(sizeof(int) * 8);
+  for (int i = 0; i < 8; i++) {
+    array[i] = i + 1;
+  }
 
-	printf("Value of first element into array: %i\n", array[0]);
+  for (int i = 0; i < 8; i++) {
+    printf("Value of array[%i] = %i\n", i, array[i]);
+  }
+
+	/* Free memory */
+	free(array);
 }
-
