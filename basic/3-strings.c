@@ -2,6 +2,6 @@
 #include <stdlib.h>
 
 int main() {
-	char c[] = {'H', 'e', 'l', 'l', 'o', '\0'};
+	char c[] = "Hello";
 	printf("%s\n", c);
 }
