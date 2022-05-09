@@ -1,23 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct {
-  double x;
-  double y;
-} Point;
+struct Node {
+  int value;
+  struct Node *next;
+};
 
 int main() {
-  Point first_point = {0.5, 5.9};
-  printf("x: %f, y:%f\n", first_point.x, first_point.y);
+  struct Node *head = malloc(sizeof(struct Node));
+  head->value = 1;
+  head->next = malloc(sizeof(struct Node));
+  head->next->value = 2;
 
-  Point another_point = {.y = 7.5, .x = 5.3};
-  printf("x: %f, y:%f\n", another_point.x, another_point.y);
-
-  /* With pointer */
-  Point *point = malloc(sizeof(Point));
-  point->x = 2.3;
-  point->y = 3.5;
-  printf("x: %f, y:%f\n", point->x, point->y);
-
-  free(point);
+  printf("First node direction: %p\n", head);
+  printf("First node value: %i\n", head->value);
+  printf("Second node direction: %p\n", head->next);
+  printf("Second node value: %i\n", head->next->value);
 }
