@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 
 int main(int argc, char **argv) {
   int pipe1[2];
@@ -11,17 +11,18 @@ int main(int argc, char **argv) {
   if (fork()) {
     /* Father */
     close(pipe1[1]);
-    read(pipe1[0], s, 64);
+    close(0);
+    dup(pipe1[0]);
     close(pipe1[0]);
-    printf("Im Father I have write from descriptor %i string: %s\n",
-           pipe1[0], s);
+		read(0, s, 64);
+    printf("Im Father I have write from standard input string: %s\n", s);
   } else {
-    /* Children */
-		strcpy(s, "Hello world, SO Course");
+    strcpy(s, "Hello world, SO Course");
     close(pipe1[0]);
-    write(pipe1[1], s, strlen(s));
+    close(1);
+    dup(pipe1[1]);
     close(pipe1[1]);
-    printf("Im Children I have write into descriptor %i string: %s\n",
-           pipe1[1], s);
+
+    printf("%s\n", s);
   }
 }
