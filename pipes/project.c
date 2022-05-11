@@ -4,27 +4,50 @@
 #include <unistd.h>
 
 int main(int argc, char **argv) {
-  int pipe1[2];
-  pipe(pipe1);
-  char s[64];
+  int pipe1[2], pipe2[2];
+  pipe(pipe2);
 
   if (fork()) {
-    /* cut */
-    close(pipe1[1]);
+    /* Grandfather sort */
+    close(pipe2[1]);
     close(0);
-    dup(pipe1[0]);
-    close(pipe1[0]);
+    dup(pipe2[0]);
+    close(pipe2[0]);
 
-    execlp("cut", "cut", "-c5-12", NULL);
-    printf("Error cut\n");
+    execlp("sort", "sort", "-u", NULL);
+    printf("Error sort\n");
   } else {
-    /* ps */
-    close(pipe1[0]);
-    close(1);
-    dup(pipe1[1]);
-    close(pipe1[1]);
+    pipe(pipe1);
+    if (fork()) {
+      /* Father cut*/
 
-    execlp("ps", "ps", "-efl", NULL);
-    printf("Error ps\n");
+      /* stdin */
+      close(pipe1[1]);
+      close(0);
+      dup(pipe1[0]);
+      close(pipe1[0]);
+
+      /* stdout */
+      close(pipe2[0]);
+      close(1);
+      dup(pipe2[1]);
+      close(pipe2[1]);
+
+      execlp("cut", "cut", "-c5-12", NULL);
+      printf("Error cut\n");
+
+    } else {
+      /* Chidren ps */
+      close(pipe2[0]);
+      close(pipe2[1]);
+
+      close(pipe1[0]);
+      close(1);
+      dup(pipe1[1]);
+      close(pipe1[1]);
+
+      execlp("ps", "ps", "-efl", NULL);
+      printf("Error ps\n");
+    }
   }
 }
